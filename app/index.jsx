@@ -1,7 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FokusButton } from "../components/FokusButton";
 import { ActionButton } from "../components/ActionButton";
+import { Timer } from "../components/Timer";
+import { IconPause, IconPlay } from "../components/Icons";
 
 const pomodoro = [
   { id: 'focus', initialValue: 25 * 60, image: require('../assets/images/IDGAF.jpg'), display: 'Foco' },
@@ -12,6 +14,49 @@ const pomodoro = [
 export default function Index() {
 
   const [timerType, setTimerType] = useState(pomodoro[0]);
+  const [seconds, setSeconds] = useState(pomodoro[0].initialValue);
+  const [timerRunning, setTimerRunning] = useState(false);
+
+  const timerRef = useRef(null);
+
+  const clear = () => {
+
+    if(timerRef.current !== null){
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setTimerRunning(false);
+    }
+  }
+
+  const toggleTimerType = (newTimerType) => {
+    setTimerType(newTimerType);
+    setSeconds(newTimerType.initialValue);
+    clear();
+  };
+
+  const toggleTimer = () => {
+
+    if(timerRef.current){
+      // Pausar
+      clear();
+      return
+    }
+
+    setTimerRunning(true);
+
+    const id = setInterval(() => {
+      setSeconds(oldState => {
+        
+        if(oldState === 0){
+          clear();
+          return timerType.initialValue;
+        }
+        return oldState - 1;
+      })
+    }, 1000);
+
+    timerRef.current = id;
+  };
 
   return (
     <View
@@ -28,18 +73,19 @@ export default function Index() {
             <ActionButton 
               key={p.id} 
               active={p.id === timerType.id}
-              onPress={() => setTimerType(p)} 
+              onPress={() => toggleTimerType(p)} 
               display={p.display} 
             />
           ))}
         </View>
 
-        <Text style={styles.timer}>
-          { new Date(timerType.initialValue * 1000)
-            .toLocaleTimeString('pt-BR', { minute: '2-digit', second: '2-digit' }) }
-        </Text>
+        <Timer totalSeconds={seconds} />
 
-        <FokusButton />
+        <FokusButton 
+          title={timerRunning ? 'Pausar' : 'Começar'}
+          icon={timerRunning ? <IconPause/> : <IconPlay/>}
+          onPress={toggleTimer}
+        />
       </View>
 
       <View style={styles.footer}>
@@ -77,12 +123,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-  },
-  timer: {
-    fontSize: 54,
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center'
   },
   footer: {
     width: '80%'
