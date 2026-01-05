@@ -25,10 +25,10 @@ export const IconCheck = ({ checked }) => {
     );
 }
 
-export const IconSave = () => {
+export const IconSave = (iconStyle) => {
 
     return (
-        <Image style={styles.icons} source={require('../../assets/icons/save.png')}/>
+        <Image style={[styles.icons, iconStyle && iconStyle]} source={require('../../assets/icons/save.png')}/>
     );
 }
 

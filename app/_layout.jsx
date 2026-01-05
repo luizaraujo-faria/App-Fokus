@@ -4,13 +4,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { TasksProvider } from "../components/context/taskProvider";
 
 export default function RootLayout(){
 
   const insets = useSafeAreaInsets();
 
   return(
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <TasksProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
        <View
         style={{
           flex: 1,
@@ -75,9 +77,25 @@ export default function RootLayout(){
               }
             }}
           />
+          <Drawer.Screen 
+            name="edit-task/[id]" 
+            options={{
+              drawerItemStyle: { display: 'none' },
+              headerLeft: () => {
+                return  <Ionicons 
+                          name="arrow-back" 
+                          color={'#fff'} 
+                          size={24}
+                          style={{ marginLeft: 16 }}
+                          onPress={() => router.navigate('/tasks')}
+                        />
+              }
+            }}
+          />
 
-        </Drawer>
-      </View> 
-    </GestureHandlerRootView>
+          </Drawer>
+        </View> 
+      </GestureHandlerRootView>
+    </TasksProvider>
   );
 }
