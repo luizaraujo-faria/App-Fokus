@@ -2,8 +2,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from 'expo-router/drawer';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { BackButtonDrawer } from "../components/BackButtonDrawer";
 import { TasksProvider } from "../components/context/taskProvider";
 
 export default function RootLayout(){
@@ -67,13 +66,7 @@ export default function RootLayout(){
             options={{
               drawerItemStyle: { display: 'none' },
               headerLeft: () => {
-                return  <Ionicons 
-                          name="arrow-back" 
-                          color={'#fff'} 
-                          size={24}
-                          style={{ marginLeft: 16 }}
-                          onPress={() => router.navigate('/tasks')}
-                        />
+                return  <BackButtonDrawer backHref='/tasks' />
               }
             }}
           />
@@ -82,13 +75,7 @@ export default function RootLayout(){
             options={{
               drawerItemStyle: { display: 'none' },
               headerLeft: () => {
-                return  <Ionicons 
-                          name="arrow-back" 
-                          color={'#fff'} 
-                          size={24}
-                          style={{ marginLeft: 16 }}
-                          onPress={() => router.navigate('/tasks')}
-                        />
+                return  <BackButtonDrawer backHref='/tasks' />
               }
             }}
           />
